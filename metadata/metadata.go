@@ -56,6 +56,7 @@ type MDSClientInterface interface {
 	GetKey(context.Context, string, map[string]string) (string, error)
 	GetKeyRecursive(context.Context, string) (string, error)
 	Watch(context.Context) (*Descriptor, error)
+	WatchKey(context.Context, string) (string, error)
 	WriteGuestAttributes(context.Context, string, string) error
 }
 
@@ -350,6 +351,16 @@ func (m *MDSReqError) Error() string {
 	return fmt.Sprintf("request failed with status code: [%d], error: [%v]", m.status, m.err)
 }
 
+// Status returns the HTTP status code of the error.
+func (m *MDSReqError) Status() int {
+	return m.status
+}
+
+// NewMDSReqError creates a new MDSReqError.
+func NewMDSReqError(status int, err error) *MDSReqError {
+	return &MDSReqError{status: status, err: err}
+}
+
 // shouldRetry method checks if MDSReqError is temporary and retriable or not.
 func shouldRetry(err error) bool {
 	e, ok := err.(*MDSReqError)
@@ -414,6 +425,21 @@ func (c *Client) GetKeyRecursive(ctx context.Context, key string) (string, error
 		baseURL:    reqURL,
 		jsonOutput: true,
 		recursive:  true,
+	}
+	return c.retry(ctx, cfg)
+}
+
+// WatchKey watches a specific metadata key.
+func (c *Client) WatchKey(ctx context.Context, key string) (string, error) {
+	reqURL, err := url.JoinPath(c.metadataURL, key)
+	if err != nil {
+		return "", fmt.Errorf("failed to form metadata url: %+v", err)
+	}
+
+	cfg := requestConfig{
+		baseURL: reqURL,
+		hang:    true,
+		timeout: defaultHangTimeout,
 	}
 	return c.retry(ctx, cfg)
 }

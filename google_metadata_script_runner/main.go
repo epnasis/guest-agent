@@ -54,7 +54,7 @@ const (
 var (
 	programName    = path.Base(os.Args[0])
 	powerShellArgs = []string{"-NoProfile", "-NoLogo", "-ExecutionPolicy", "Unrestricted", "-File"}
-	errUsage       = fmt.Errorf("no valid arguments specified. Specify one of \"startup\", \"shutdown\" or \"specialize\"")
+	errUsage       = fmt.Errorf("no valid arguments specified. Specify one of \"startup\", \"shutdown\", \"specialize\" or \"graceful-shutdown\"")
 
 	// Many of the Google Storage URLs are supported below.
 	// It is preferred that customers specify their object using
@@ -362,6 +362,10 @@ func getWantedKeys(args []string, os string) ([]string, error) {
 			if !cfg.Get().MetadataScripts.Shutdown {
 				return nil, fmt.Errorf("shutdown scripts disabled in instance config")
 			}
+		}
+	case "graceful-shutdown":
+		if os == "windows" {
+			prefix = "windows-" + prefix
 		}
 	default:
 		return nil, errUsage

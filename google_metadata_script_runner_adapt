@@ -5,7 +5,9 @@
 # known service binary.
 #
 
-if [ -e /usr/bin/gce_compat_metadata_script_runner ]; then
+if [ "$1" = "graceful-shutdown" ]; then
+  /usr/bin/google_metadata_script_runner $1
+elif [ -e /usr/bin/gce_compat_metadata_script_runner ]; then
   /usr/bin/gce_compat_metadata_script_runner $1
 else
   /usr/bin/google_metadata_script_runner $1

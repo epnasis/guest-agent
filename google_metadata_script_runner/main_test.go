@@ -183,6 +183,10 @@ func (mds *mdsClient) GetKeyRecursive(ctx context.Context, key string) (string, 
 	return `{"key1":"value1","key2":"value2"}`, nil
 }
 
+func (mds *mdsClient) WatchKey(ctx context.Context, key string) (string, error) {
+	return "", fmt.Errorf("WatchKey() not yet implemented")
+}
+
 func (mds *mdsClient) Watch(ctx context.Context) (*metadata.Descriptor, error) {
 	return nil, fmt.Errorf("Watch() not yet implemented")
 }

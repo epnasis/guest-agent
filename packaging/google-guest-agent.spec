@@ -111,6 +111,7 @@ install -p -m 0644 google-guest-compat-manager.service %{buildroot}%{_unitdir}
 
 install -p -m 0644 google-startup-scripts.service %{buildroot}%{_unitdir}
 install -p -m 0644 google-shutdown-scripts.service %{buildroot}%{_unitdir}
+install -p -m 0644 google-graceful-shutdown-scripts.service %{buildroot}%{_unitdir}
 install -p -m 0644 gce-workload-cert-refresh.service %{buildroot}%{_unitdir}
 install -p -m 0644 gce-workload-cert-refresh.timer %{buildroot}%{_unitdir}
 install -p -m 0644 90-%{name}.preset %{buildroot}%{_presetdir}/90-%{name}.preset
@@ -148,6 +149,7 @@ install -p -m 0644 90-%{name}.preset %{buildroot}%{_presetdir}/90-%{name}.preset
 
 %{_unitdir}/google-startup-scripts.service
 %{_unitdir}/google-shutdown-scripts.service
+%{_unitdir}/google-graceful-shutdown-scripts.service
 %{_unitdir}/gce-workload-cert-refresh.service
 %{_unitdir}/gce-workload-cert-refresh.timer
 %{_presetdir}/90-%{name}.preset
@@ -167,6 +169,7 @@ if [ $1 -eq 1 ]; then
   # chroots.
   systemctl enable google-startup-scripts.service >/dev/null 2>&1 || :
   systemctl enable google-shutdown-scripts.service >/dev/null 2>&1 || :
+  systemctl enable google-graceful-shutdown-scripts.service >/dev/null 2>&1 || :
   systemctl enable gce-workload-cert-refresh.timer >/dev/null 2>&1 || :
 
   %if 0%{?build_plugin_manager}
@@ -226,6 +229,7 @@ if [ $1 -eq 0 ]; then
   systemctl --no-reload disable google-guest-agent.service >/dev/null 2>&1 || :
   systemctl --no-reload disable google-startup-scripts.service >/dev/null 2>&1 || :
   systemctl --no-reload disable google-shutdown-scripts.service >/dev/null 2>&1 || :
+  systemctl --no-reload disable google-graceful-shutdown-scripts.service >/dev/null 2>&1 || :
   systemctl --no-reload disable gce-workload-cert-refresh.timer >/dev/null 2>&1 || :
   if [ -d /run/systemd/system ]; then
     systemctl stop google-guest-agent.service >/dev/null 2>&1 || :

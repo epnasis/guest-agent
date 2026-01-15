@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/GoogleCloudPlatform/guest-agent/google_guest_agent/events/gracefulshutdown"
 	"github.com/GoogleCloudPlatform/guest-agent/google_guest_agent/events/metadata"
 	"github.com/GoogleCloudPlatform/guest-logging-go/logger"
 )
@@ -27,6 +28,7 @@ import (
 var (
 	defaultWatchers = []Watcher{
 		metadata.New(),
+		gracefulshutdown.New(),
 	}
 	instance *Manager
 )

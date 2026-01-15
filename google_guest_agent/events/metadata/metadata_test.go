@@ -43,6 +43,10 @@ func (mds *mdsClient) GetKeyRecursive(ctx context.Context, key string) (string, 
 	return "", fmt.Errorf("GetKeyRecursive() not yet implemented")
 }
 
+func (mds *mdsClient) WatchKey(ctx context.Context, key string) (string, error) {
+	return "", fmt.Errorf("WatchKey() not yet implemented")
+}
+
 func (mds *mdsClient) Watch(ctx context.Context) (*metadata.Descriptor, error) {
 	if !mds.disableUnknownFailure {
 		return nil, errUnknown
